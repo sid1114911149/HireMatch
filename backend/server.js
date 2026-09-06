@@ -25,8 +25,18 @@ if (!fs.existsSync(uploadDir)) {
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 
 // CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  process.env.FRONTEND_URL, // e.g. https://hirematch.vercel.app
+].filter(Boolean);
+
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (Render health checks, Postman, curl)
+    if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error(`CORS blocked: ${origin}`));
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -60,6 +70,17 @@ if (process.env.NODE_ENV === 'development') {
 
 // Static files (uploaded resumes)
 app.use('/uploads', express.static(uploadDir));
+
+// Root route — prevents Render health-check 404s
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: '🚀 HireMatch API is live',
+    version: '1.0.0',
+    docs: '/api/health',
+    timestamp: new Date().toISOString(),
+  });
+});
 
 // Health check
 app.get('/api/health', (req, res) => {
