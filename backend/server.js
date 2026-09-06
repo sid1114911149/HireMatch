@@ -28,7 +28,9 @@ app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
-  process.env.FRONTEND_URL, // e.g. https://hirematch.vercel.app
+  'https://hire-match-zyv6.vercel.app',   // deployed frontend
+  'https://hirematchml.onrender.com',      // ML service
+  process.env.FRONTEND_URL,               // override via env if needed
 ].filter(Boolean);
 
 app.use(cors({
