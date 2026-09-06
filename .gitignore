@@ -1,0 +1,42 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build
+dist/
+build/
+.vite/
+
+# Backend uploads
+backend/uploads/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+ml/.env
+
+# ML models
+ml/models/*.pkl
+ml/models/*.joblib
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/
