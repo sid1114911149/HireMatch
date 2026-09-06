@@ -1,8 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List, Optional
-import numpy as np
+from typing import List
 import re
 import math
 
@@ -65,6 +64,9 @@ def compute_tfidf(corpus: List[List[str]]) -> List[dict]:
     # TF-IDF per doc
     vectors = []
     for doc in corpus:
+        if not doc:
+            vectors.append({})
+            continue
         tf = {}
         for word in doc:
             tf[word] = tf.get(word, 0) + 1
@@ -155,6 +157,11 @@ def build_skill_gap(missing_skills: List[str], matched_count: int) -> List[dict]
 
 
 # ─── Endpoints ──────────────────────────────────────────────────────────────
+
+@app.get("/")
+def root():
+    return {"status": "ok", "service": "HireMatch ML Service", "version": "1.0.0", "docs": "/docs"}
+
 
 @app.get("/ml/health")
 def health():
